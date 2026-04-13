@@ -6,7 +6,7 @@ import { FiGithub, FiExternalLink } from "react-icons/fi";
 
 export default function ProjectsSection() {
   return (
-    <section id="projects" className="py-24 px-6 bg-pastel/15">
+    <section id="projects" className="pt-10 pb-24 px-6 bg-pastel/15">
       <div className="max-w-5xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}

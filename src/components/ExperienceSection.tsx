@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="py-24 px-6">
+    <section id="experience" className="pt-10 pb-12 px-6">
       <div className="max-w-4xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -14,7 +14,7 @@ export default function ExperienceSection() {
           transition={{ duration: 0.5 }}
           className="font-serif text-3xl md:text-4xl font-bold text-bordeaux mb-16 text-center"
         >
-          Experience
+          Work Experience
         </motion.h2>
 
         <div className="relative">

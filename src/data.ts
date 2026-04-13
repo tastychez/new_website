@@ -101,14 +101,15 @@ export const projects: Project[] = [
     description:
       "Bio-inspired, weed-uprooting robot for rice fields. Won 1st Place and $5,000 in seed funding at the Babson College Buildathon out of 500+ participants. Uses a trained Computer Vision model to differentiate invasive weeds from crops, with Arduino-driven motor control for targeted uprooting.",
     techStack: ["Computer Vision", "Python", "Arduino", "C++", "Motor Control"],
+    github: "https://github.com/tastychez/rice_crop_detector",
   },
   {
     name: "Balloon Tower Defense",
     description:
       "A fully playable tower defense game built from scratch in Python using Pygame. Features multiple tower and balloon types with strategic gameplay mechanics.",
     techStack: ["Python", "Pygame", "OOP"],
-    link: "https://olincollege.github.io/BalloonTD0/",
-    github: "https://github.com/olincollege/BalloonTD0",
+    link: "https://balloon-td-0.vercel.app/",
+    github: "https://github.com/tastychez/BalloonTD0",
   },
   {
     name: "Hand Gesture Recognition",
@@ -145,6 +146,50 @@ export const skillCategories: SkillCategory[] = [
   {
     category: "Other",
     skills: ["Cybersecurity", "Photography", "Digital Editing"],
+  },
+];
+
+export interface Education {
+  school: string;
+  degree: string;
+  date: string;
+  gpa?: string;
+  highlights: string[];
+}
+
+export const education: Education[] = [
+  {
+    school: "Olin College of Engineering — Needham, Massachusetts",
+    degree: "Bachelor of Science in Electrical and Computer Engineering",
+    date: "2024 — 2028",
+    gpa: "4.0/4.0",
+    highlights: [
+      "Relevant Coursework: Computer Architecture, Applied Calculus, Software Design, Software Systems, Principles of Integrated Engineering, Data Structures, Machine Learning, Probability and Statistics",
+      "50% Off Tuition Merit Scholarship: Awarded merit-based scholarship covering 50% of tuition costs, recognizing academic excellence and leadership potential",
+      "ICPC Qualifier: Ranked Top 10 regionally and Top 25% overall in the International Collegiate Programming Contest",
+      "Participated in Stanford SERIS Program: Summer Engineering Research Internship at Stanford University, gaining hands-on research experience in engineering",
+      "Board Member of Ascend Olin Chapter: Served as board member contributing to leadership initiatives and professional development for Pan-Asian students",
+      "Social Media Intern of Olin Admission and Financial Aid: Created engaging content and managed social media presence to attract prospective students and support enrollment initiatives",
+    ],
+  },
+  {
+    school: "Babson College (Cross-Registration)",
+    degree: "Certificate of Entrepreneurship",
+    date: "2024 — Present",
+    highlights: [],
+  },
+  {
+    school: "High School for Mathematics, Science, and Engineering at City College — Manhattan, New York",
+    degree: "High School Diploma",
+    date: "2020 — 2024",
+    gpa: "4.0/4.0",
+    highlights: [
+      "Relevant Coursework: AP Computer Science A, AP Calculus BC, AP Physics C: Mechanics",
+      "Amazon Future Engineer Scholarship: $40,000 for tuition and a guaranteed paid internship at Amazon as a freshman (selected from 5,000+ applicants)",
+      "Outstanding Research Award, NYU STEP: Published a 15-page paper and presented research on the impact of AI in cybersecurity",
+      "Co-Founder — Coding Club; Co-President — Asian Cultural Society",
+      "Participated in NYU CS4CS, a month-long summer program teaching cybersecurity through projects and CTF competitions",
+    ],
   },
 ];
 

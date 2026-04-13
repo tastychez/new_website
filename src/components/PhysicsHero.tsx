@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import Matter from "matter-js";
 
 const LETTERS = "HONG YI ZHANG".split("");
@@ -11,162 +11,184 @@ function getColor(index: number) {
   return PALETTE[index % PALETTE.length];
 }
 
-export default function PhysicsHero() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const engineRef = useRef<Matter.Engine | null>(null);
-  const renderRef = useRef<Matter.Render | null>(null);
-  const runnerRef = useRef<Matter.Runner | null>(null);
-  const [ready, setReady] = useState(false);
+interface PhysicsState {
+  engine: Matter.Engine;
+  render: Matter.Render;
+  runner: Matter.Runner;
+  mouse: any;
+}
 
-  const setup = useCallback(() => {
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (!container || !canvas) return;
+function teardown(state: PhysicsState | null) {
+  if (!state) return;
+  const { engine, render, runner, mouse } = state;
 
-    if (renderRef.current) {
-      Matter.Render.stop(renderRef.current);
+  Matter.Render.stop(render);
+  Matter.Runner.stop(runner);
+  Matter.Engine.clear(engine);
+
+  const el = mouse.element as HTMLElement;
+  el.removeEventListener("mousemove", mouse.mousemove);
+  el.removeEventListener("mousedown", mouse.mousedown);
+  el.removeEventListener("mouseup", mouse.mouseup);
+  el.removeEventListener("wheel", mouse.mousewheel);
+  el.removeEventListener("touchmove", mouse.mousemove);
+  el.removeEventListener("touchstart", mouse.mousedown);
+  el.removeEventListener("touchend", mouse.mouseup);
+}
+
+function createScene(
+  canvas: HTMLCanvasElement,
+  container: HTMLDivElement,
+): PhysicsState {
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  const engine = Matter.Engine.create({
+    gravity: { x: 0, y: 1.2, scale: 0.001 },
+  });
+
+  const render = Matter.Render.create({
+    canvas,
+    engine,
+    options: {
+      width,
+      height,
+      wireframes: false,
+      background: "transparent",
+      pixelRatio: window.devicePixelRatio || 1,
+    },
+  });
+
+  const wallThickness = 60;
+  const walls = [
+    Matter.Bodies.rectangle(
+      width / 2, height + wallThickness / 2, width + 200, wallThickness,
+      { isStatic: true, render: { visible: false } },
+    ),
+    Matter.Bodies.rectangle(
+      -wallThickness / 2, height / 2, wallThickness, height * 2,
+      { isStatic: true, render: { visible: false } },
+    ),
+    Matter.Bodies.rectangle(
+      width + wallThickness / 2, height / 2, wallThickness, height * 2,
+      { isStatic: true, render: { visible: false } },
+    ),
+  ];
+
+  const blockSize = Math.min(Math.max(width / 16, 36), 64);
+  const fontSize = blockSize * 0.6;
+  const cornerRadius = 8;
+
+  const spaceCount = LETTERS.filter((l) => l === " ").length;
+  const totalLetters = LETTERS.filter((l) => l !== " ").length;
+  const spaceGap = blockSize * 0.6;
+  const spacing = Math.min(
+    blockSize * 1.4,
+    (width - 40 - spaceCount * spaceGap) / totalLetters,
+  );
+  const totalWidth = totalLetters * spacing + spaceCount * spaceGap;
+  const startX = (width - totalWidth) / 2 + spacing / 2;
+
+  let cursorX = startX;
+  let colorIndex = 0;
+  const bodies: Matter.Body[] = [];
+
+  LETTERS.forEach((letter) => {
+    if (letter === " ") {
+      cursorX += spaceGap;
+      return;
     }
-    if (runnerRef.current) {
-      Matter.Runner.stop(runnerRef.current);
-    }
-    if (engineRef.current) {
-      Matter.Engine.clear(engineRef.current);
-    }
 
-    const width = container.clientWidth;
-    const height = container.clientHeight;
-
-    const engine = Matter.Engine.create({
-      gravity: { x: 0, y: 1.2, scale: 0.001 },
-    });
-    engineRef.current = engine;
-
-    const render = Matter.Render.create({
-      canvas,
-      engine,
-      options: {
-        width,
-        height,
-        wireframes: false,
-        background: "transparent",
-        pixelRatio: window.devicePixelRatio || 1,
-      },
-    });
-    renderRef.current = render;
-
-    const wallThickness = 60;
-    const walls = [
-      // floor
-      Matter.Bodies.rectangle(width / 2, height + wallThickness / 2, width + 200, wallThickness, {
-        isStatic: true,
-        render: { visible: false },
-      }),
-      // left wall
-      Matter.Bodies.rectangle(-wallThickness / 2, height / 2, wallThickness, height * 2, {
-        isStatic: true,
-        render: { visible: false },
-      }),
-      // right wall
-      Matter.Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 2, {
-        isStatic: true,
-        render: { visible: false },
-      }),
-    ];
-
-    const blockSize = Math.min(Math.max(width / 16, 36), 64);
-    const fontSize = blockSize * 0.6;
-    const cornerRadius = 8;
-
-    const totalLetters = LETTERS.filter((l) => l !== " ").length;
-    const spacing = Math.min(blockSize * 1.4, (width - 40) / totalLetters);
-    const totalWidth = totalLetters * spacing;
-    const startX = (width - totalWidth) / 2 + spacing / 2;
-
-    let letterIndex = 0;
-    const bodies: Matter.Body[] = [];
-
-    LETTERS.forEach((letter) => {
-      if (letter === " ") return;
-
-      const x = startX + letterIndex * spacing;
-      const y = -50 - Math.random() * 300;
-
-      const body = Matter.Bodies.rectangle(x, y, blockSize, blockSize, {
+    const body = Matter.Bodies.rectangle(
+      cursorX,
+      -50 - Math.random() * 300,
+      blockSize,
+      blockSize,
+      {
         chamfer: { radius: cornerRadius },
         restitution: 0.4,
         friction: 0.3,
         frictionAir: 0.01,
         density: 0.002,
-        render: {
-          fillStyle: getColor(letterIndex),
-        },
+        render: { fillStyle: getColor(colorIndex) },
         label: letter,
-      });
-
-      bodies.push(body);
-      letterIndex++;
-    });
-
-    Matter.Composite.add(engine.world, [...walls, ...bodies]);
-
-    const mouse = Matter.Mouse.create(render.canvas);
-    const mouseConstraint = Matter.MouseConstraint.create(engine, {
-      mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: { visible: false },
       },
+    );
+
+    bodies.push(body);
+    cursorX += spacing;
+    colorIndex++;
+  });
+
+  Matter.Composite.add(engine.world, [...walls, ...bodies]);
+
+  const mouse = Matter.Mouse.create(render.canvas);
+  const mouseConstraint = Matter.MouseConstraint.create(engine, {
+    mouse,
+    constraint: { stiffness: 0.2, render: { visible: false } },
+  });
+
+  // Remove wheel + touch handlers that call preventDefault() and block scrolling.
+  // Mouse click/move handlers stay so blocks remain draggable on desktop.
+  const el = mouse.element as HTMLElement;
+  el.removeEventListener("wheel", (mouse as any).mousewheel);
+  el.removeEventListener("touchmove", (mouse as any).mousemove);
+  el.removeEventListener("touchstart", (mouse as any).mousedown);
+  el.removeEventListener("touchend", (mouse as any).mouseup);
+
+  Matter.Composite.add(engine.world, mouseConstraint);
+
+  Matter.Events.on(render, "afterRender", () => {
+    const ctx = render.context as CanvasRenderingContext2D;
+    bodies.forEach((body) => {
+      const { x, y } = body.position;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(body.angle);
+      ctx.font = `bold ${fontSize}px 'Nunito', sans-serif`;
+      ctx.fillStyle = "#FFCBDD";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(body.label, 0, 0);
+      ctx.restore();
     });
+  });
 
-    // Fix scroll passthrough
-    mouse.element.removeEventListener("mousewheel", (mouse as any).mousewheel);
-    mouse.element.removeEventListener("DOMMouseScroll", (mouse as any).mousewheel);
+  const runner = Matter.Runner.create();
 
-    Matter.Composite.add(engine.world, mouseConstraint);
-    render.mouse = mouse;
+  Matter.Render.run(render);
+  Matter.Runner.run(runner, engine);
 
-    Matter.Events.on(render, "afterRender", () => {
-      const ctx = render.context as CanvasRenderingContext2D;
+  return { engine, render, runner, mouse };
+}
 
-      bodies.forEach((body) => {
-        const { x, y } = body.position;
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(body.angle);
-        ctx.font = `bold ${fontSize}px 'Nunito', sans-serif`;
-        ctx.fillStyle = "#FFCBDD";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(body.label, 0, 0);
-        ctx.restore();
-      });
-    });
-
-    const runner = Matter.Runner.create();
-    runnerRef.current = runner;
-
-    Matter.Render.run(render);
-    Matter.Runner.run(runner, engine);
-
-    setReady(true);
-  }, []);
+export default function PhysicsHero() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const stateRef = useRef<PhysicsState | null>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setup();
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    teardown(stateRef.current);
+    stateRef.current = createScene(canvas, container);
+    setReady(true);
 
     const handleResize = () => {
-      setup();
+      teardown(stateRef.current);
+      stateRef.current = createScene(canvas, container);
     };
 
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (renderRef.current) Matter.Render.stop(renderRef.current);
-      if (runnerRef.current) Matter.Runner.stop(runnerRef.current);
-      if (engineRef.current) Matter.Engine.clear(engineRef.current);
+      teardown(stateRef.current);
+      stateRef.current = null;
     };
-  }, [setup]);
+  }, []);
 
   return (
     <div
@@ -181,6 +203,7 @@ export default function PhysicsHero() {
           cursor: "grab",
           opacity: ready ? 1 : 0,
           transition: "opacity 0.6s ease-in-out",
+          touchAction: "auto",
         }}
       />
       {!ready && (

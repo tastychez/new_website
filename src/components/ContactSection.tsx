@@ -63,7 +63,7 @@ export default function ContactSection() {
 
   if (isSubmitted) {
     return (
-      <section id="contact" className="py-24 px-6">
+      <section id="contact" className="pt-10 pb-24 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -105,7 +105,7 @@ export default function ContactSection() {
   }
 
   return (
-    <section id="contact" className="py-24 px-6 bg-pastel/15">
+    <section id="contact" className="pt-10 pb-24 px-6 bg-pastel/15">
       <div className="max-w-2xl mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
