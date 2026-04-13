@@ -15,6 +15,7 @@ export interface Project {
   devpost?: string;
   image?: string;
   imageClassName?: string;
+  imageStyle?: React.CSSProperties;
   featured?: boolean;
 }
 
@@ -93,6 +94,7 @@ export const experiences: Experience[] = [
 ];
 
 export const projects: Project[] = [
+  // Row 1: wide/landscape images (3+3)
   {
     name: "Canary — Digital Mine Safety System",
     description:
@@ -100,18 +102,19 @@ export const projects: Project[] = [
     techStack: ["Python", "Raspberry Pi", "Sensors", "Simulation"],
     github: "https://github.com/tastychez/Canary",
     devpost: "https://devpost.com/software/canary-axf7o2?ref_content=my-projects-tab&ref_feature=my_projects",
-    image: "/projects/canary.jpg",
+    image: "/projects/canary-hw.png",
     featured: true,
   },
   {
-    name: "AI.gamo — Agri-Tech Robot",
+    name: "RV32I Multicycle Processor",
     description:
-      "Bio-inspired, weed-uprooting robot for rice fields. Won 1st Place and $5,000 in seed funding at the Babson College Buildathon out of 500+ participants. Uses a trained Computer Vision model to differentiate invasive weeds from crops, with Arduino-driven motor control for targeted uprooting.",
-    techStack: ["Computer Vision", "Python", "Arduino", "C++", "Motor Control"],
-    github: "https://github.com/tastychez/rice_crop_detector",
-    image: "/projects/aigamo.jpg",
-    featured: true,
+      "32-bit RISC-V integer microprocessor with Harvard architecture, designed in SystemVerilog. Features an FSM-based multicycle control unit, full RV32I instruction set support, and hardware peripheral I/O. Verified with Icarus Verilog and deployed on an iCE40UP5K FPGA.",
+    techStack: ["SystemVerilog", "RISC-V", "FPGA", "Icarus Verilog"],
+    github: "https://github.com/We1chJ/iceBlinkPico/tree/xmp4",
+    image: "/projects/riscv.png",
+    imageClassName: "object-contain bg-white",
   },
+  // Row 2: portrait/square images (2+2+2)
   {
     name: "Disc Golf Disc Cleaner",
     description:
@@ -119,7 +122,7 @@ export const projects: Project[] = [
     techStack: ["Python", "Roboflow", "OpenCV", "Raspberry Pi", "Robotics"],
     link: "https://disc-golf-project.vercel.app/#/",
     github: "https://github.com/ConnorHoang/Disk-Golf-Cleaner",
-    image: "/projects/disc-golf.jpg",
+    image: "/projects/disc-golf.png",
     featured: true,
   },
   {
@@ -128,16 +131,20 @@ export const projects: Project[] = [
       "Inverted pendulum balancing robot built on a Pololu Balboa platform. Designed a 5-pole PI controller for simultaneous angle stabilization and stationary position hold, modeled in MATLAB/Simulink, then empirically tuned on hardware to handle real-world motor delay and saturation.",
     techStack: ["MATLAB", "Simulink", "C++", "Arduino", "Control Systems"],
     link: "https://www.youtube.com/shorts/h7tqY11KXBA",
-    image: "/projects/rocky.jpg",
+    image: "/projects/rocky.png",
+    imageClassName: "object-cover",
+    imageStyle: { objectPosition: "center 65%" },
   },
   {
-    name: "RV32I Multicycle Processor",
+    name: "AI.gamo — Agri-Tech Robot",
     description:
-      "32-bit RISC-V integer microprocessor with Harvard architecture, designed in SystemVerilog. Features an FSM-based multicycle control unit, full RV32I instruction set support, and hardware peripheral I/O. Verified with Icarus Verilog and deployed on an iCE40UP5K FPGA.",
-    techStack: ["SystemVerilog", "RISC-V", "FPGA", "Icarus Verilog"],
-    github: "https://github.com/We1chJ/iceBlinkPico/tree/xmp4",
-    image: "/projects/riscv.jpg",
+      "Bio-inspired, weed-uprooting robot for rice fields. Won 1st Place and $5,000 in seed funding at the Babson College Buildathon out of 500+ participants. Uses a trained Computer Vision model to differentiate invasive weeds from crops, with Arduino-driven motor control for targeted uprooting.",
+    techStack: ["Computer Vision", "Python", "Arduino", "C++", "Motor Control"],
+    github: "https://github.com/tastychez/rice_crop_detector",
+    image: "/projects/aigamo.png",
+    featured: true,
   },
+  // Row 3: remaining landscape images (2+2+2)
   {
     name: "Balloon Tower Defense",
     description:
