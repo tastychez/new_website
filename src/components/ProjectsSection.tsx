@@ -2,7 +2,7 @@
 
 import { projects } from "@/data";
 import { motion } from "framer-motion";
-import { FiGithub, FiExternalLink } from "react-icons/fi";
+import { FiGithub, FiExternalLink, FiYoutube, FiGlobe, FiFileText } from "react-icons/fi";
 import { SiDevpost } from "react-icons/si";
 import Image from "next/image";
 import { useState } from "react";
@@ -26,9 +26,9 @@ const COL_SPANS = [3, 3, 2, 2, 2, 2, 2, 2];
 const IMG_HEIGHTS = [
   "h-48 md:h-56",
   "h-48 md:h-56",
-  "h-56 md:h-72",
-  "h-56 md:h-72",
-  "h-56 md:h-72",
+  "h-64 md:h-80",
+  "h-64 md:h-80",
+  "h-64 md:h-80",
   "h-40 md:h-48",
   "h-40 md:h-48",
   "h-40 md:h-48",
@@ -88,7 +88,7 @@ function LinkIcon({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-bordeaux/40 hover:text-strawberry transition-colors"
+      className="text-bordeaux/60 hover:text-strawberry transition-colors"
       aria-label={label}
     >
       {children}
@@ -164,8 +164,24 @@ export default function ProjectsSection() {
                         href={project.link}
                         label={`${project.name} Live`}
                       >
-                        <FiExternalLink size={17} />
+                        {project.linkIcon === "youtube" ? (
+                          <FiYoutube size={18} />
+                        ) : project.linkIcon === "website" ? (
+                          <FiGlobe size={17} />
+                        ) : (
+                          <FiExternalLink size={17} />
+                        )}
                       </LinkIcon>
+                    )}
+                    {project.report && (
+                      <a
+                        href={project.report}
+                        download
+                        className="text-bordeaux/60 hover:text-strawberry transition-colors"
+                        aria-label={`${project.name} Report`}
+                      >
+                        <FiFileText size={17} />
+                      </a>
                     )}
                   </div>
                 </div>

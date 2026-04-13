@@ -13,9 +13,11 @@ export interface Project {
   link?: string;
   github?: string;
   devpost?: string;
+  report?: string;
   image?: string;
   imageClassName?: string;
   imageStyle?: React.CSSProperties;
+  linkIcon?: "youtube" | "website" | "external";
   featured?: boolean;
 }
 
@@ -111,6 +113,7 @@ export const projects: Project[] = [
       "32-bit RISC-V integer microprocessor with Harvard architecture, designed in SystemVerilog. Features an FSM-based multicycle control unit, full RV32I instruction set support, and hardware peripheral I/O. Verified with Icarus Verilog and deployed on an iCE40UP5K FPGA.",
     techStack: ["SystemVerilog", "RISC-V", "FPGA", "Icarus Verilog"],
     github: "https://github.com/We1chJ/iceBlinkPico/tree/xmp4",
+    report: "/projects/RV32I_Multicycle_Processor_Report.pdf",
     image: "/projects/riscv.png",
     imageClassName: "object-contain bg-white",
   },
@@ -123,6 +126,7 @@ export const projects: Project[] = [
     link: "https://disc-golf-project.vercel.app/#/",
     github: "https://github.com/ConnorHoang/Disk-Golf-Cleaner",
     image: "/projects/disc-golf.png",
+    linkIcon: "youtube",
     featured: true,
   },
   {
@@ -131,7 +135,9 @@ export const projects: Project[] = [
       "Inverted pendulum balancing robot built on a Pololu Balboa platform. Designed a 5-pole PI controller for simultaneous angle stabilization and stationary position hold, modeled in MATLAB/Simulink, then empirically tuned on hardware to handle real-world motor delay and saturation.",
     techStack: ["MATLAB", "Simulink", "C++", "Arduino", "Control Systems"],
     link: "https://www.youtube.com/shorts/h7tqY11KXBA",
+    report: "/projects/Rocky_Project.pdf",
     image: "/projects/rocky.png",
+    linkIcon: "youtube",
     imageClassName: "object-cover",
     imageStyle: { objectPosition: "center 65%" },
   },
@@ -153,6 +159,7 @@ export const projects: Project[] = [
     link: "https://balloon-td-0.vercel.app/",
     github: "https://github.com/tastychez/BalloonTD0",
     image: "/projects/balloon-td.png",
+    linkIcon: "website",
     imageClassName: "object-cover object-top",
   },
   {
