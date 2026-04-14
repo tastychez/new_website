@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { FiExternalLink } from "react-icons/fi";
 
 export default function AboutSection() {
   return (
@@ -36,10 +37,19 @@ export default function AboutSection() {
               I&apos;m an Electrical &amp; Computer Engineering student at Olin
               College who loves doing cool stuff :D
             </p>
-            <p className="text-bordeaux/70 leading-relaxed text-lg">
+            <p className="text-bordeaux/70 leading-relaxed text-lg mb-6">
               When I&apos;m not coding, you&apos;ll find me taking photos,
               going on a new adventure, or going to the gym!
             </p>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-strawberry text-white font-semibold rounded-lg shadow-md hover:bg-amaranth transition-colors duration-200"
+            >
+              Resume
+              <FiExternalLink size={16} />
+            </a>
           </div>
         </motion.div>
       </div>
